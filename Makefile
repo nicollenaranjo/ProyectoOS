@@ -14,13 +14,3 @@ ecs-egent2: ecs-egent2.o
 
 ecs: ecs.o
 	gcc -o ecs ecs.o
-
-tar:
-	tar cf ../examples.tar . 
-	mv ../examples.tar .
-	
-clean:
-	rm -f *.o
-	rm -f *.class
-	rm -f message_sender01 message_sender02 message_receiver shared_memory_get01 shared_memory_get02 shared_memory_set01 shared_memory_set02
-	rm -f ordinary_pipe pipe_reader01 pipe_writer01

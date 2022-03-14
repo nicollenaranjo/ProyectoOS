@@ -58,7 +58,8 @@ int main(int argc , char *argv[])
         //Receive a message from client
         if (recv(clientSock, clientMessage, 2000, 0) > 0) 
         {
-			char *token = strtok(clientMessage, ",");			
+			char *token = strtok(clientMessage, ",");
+			//Select command and name			
 			if( strcmp(token,"create") == 0 ){
 				char *token2 = strtok(NULL, ",");
 				char *tmp = token2;
@@ -74,7 +75,7 @@ int main(int argc , char *argv[])
 				char *tmp = token2;
 				char *const argv2[] = {"ecs-egent1", "docker", "rm", "--force", tmp, NULL}
 			}
-            printf("received message: %s\n", clientMessage);
+            printf("received message: %s\n", token);
             //Send the message back to client
             send(clientSock, clientMessage, strlen(clientMessage), 0);
         } 

@@ -58,6 +58,36 @@ int main(int argc , char *argv[])
         //Receive a message from client
         if (recv(clientSock, clientMessage, 2000, 0) > 0) 
         {
+			char *token = strtok(clientMessage, ","); 
+			 //Select command and name
+			if( strcmp(token,"create") == 0 ){ 
+				char *token2 = strtok(NULL, ",");
+				char *tmp = token2;
+				char *const argv2[] = {"./ecs-egent1", "docker", "build", "--t", tmp, NULL}
+				execv(argv2[0], argv2);
+				perror("Return from execlp() not expected");
+			}
+			else if( strcmp(token,"stop") == 0 ){
+				char *token2 = strtok(NULL, ",");
+				char *tmp = token2;
+				char *const argv2[] = {"./ecs-egent1", "docker", "stop", tmp, NULL}
+				execv(argv2[0], argv2);
+				perror("Return from execlp() not expected");
+			}
+			else if( strcmp(token,"run") == 0 ){
+				char *token2 = strtok(NULL, ",");
+				char *tmp = token2;
+				char *const argv2[] = {"./ecs-egent1", "docker", "run", tmp, NULL}
+				execv(argv2[0], argv2);
+				perror("Return from execlp() not expected");
+			}
+			else{
+				char *token2 = strtok(NULL, ",");
+				char *tmp = token2;
+				char *const argv2[] = {"./ecs-egent1", "docker", "rm", "--force", tmp, NULL}
+				execv(argv2[0], argv2);
+				perror("Return from execlp() not expected");
+			}
             printf("received message: %s\n", clientMessage);
             //Send the message back to client
             send(clientSock, clientMessage, strlen(clientMessage), 0);

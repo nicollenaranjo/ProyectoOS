@@ -1,5 +1,5 @@
-FROM hello-world:lastest
+FROM ubuntu:lastest
 
-RUN docker pull hello-world
+RUN docker pull ubuntu
 
-CMD ["python"]
+CMD ["bash"]
