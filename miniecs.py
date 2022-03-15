@@ -7,18 +7,18 @@ def createContainer(name):
     sock = socket.create_connection(('localhost', 7070))
 
     try:
-        mesStr = "(create, {0})".format(name)
-        message = bytes(mesStr, 'utf-8')
-        print('sending {!r}'.format(message))
-        sock.sendall(message)
+            mesStr = "create, {0}".format(name)
+            message = bytes(mesStr, 'utf-8')
+            print('sending {!r}'.format(message))
+            sock.sendall(message)
 
-        amount_received = 0
-        amount_expected = len(message)
+            amount_received = 0
+            amount_expected = 6
 
-        while amount_received < amount_expected:
-            data = sock.recv(160)
-            amount_received += len(data)
-            print('received {!r}'.format(data))
+            while amount_received < amount_expected:
+                data = sock.recv(160)
+                amount_received += len(data)
+                print('received {!r}'.format(data))
 
     finally:
         print('closing socket')
@@ -26,22 +26,22 @@ def createContainer(name):
         return "creation successful"
 
 def startContainer(name):
-    # Start a TCP/IP socket
+    # Create a TCP/IP socket
     sock = socket.create_connection(('localhost', 7070))
 
     try:
-        mesStr = "(start, {0})".format(name)
-        message = bytes(mesStr, 'utf-8')
-        print('sending {!r}'.format(message))
-        sock.sendall(message)
+            mesStr = "start, {0}".format(name)
+            message = bytes(mesStr, 'utf-8')
+            print('sending {!r}'.format(message))
+            sock.sendall(message)
 
-        amount_received = 0
-        amount_expected = len(message)
+            amount_received = 0
+            amount_expected = 6
 
-        while amount_received < amount_expected:
-            data = sock.recv(160)
-            amount_received += len(data)
-            print('received {!r}'.format(data))
+            while amount_received < amount_expected:
+                data = sock.recv(160)
+                amount_received += len(data)
+                print('received {!r}'.format(data))
 
     finally:
         print('closing socket')
@@ -49,22 +49,22 @@ def startContainer(name):
         return "start successful"
 
 def stopContainer(name):
-    # Stop a TCP/IP socket
+    # Create a TCP/IP socket
     sock = socket.create_connection(('localhost', 7070))
 
     try:
-        mesStr = "(stop, {0})".format(name)
-        message = bytes(mesStr, 'utf-8')
-        print('sending {!r}'.format(message))
-        sock.sendall(message)
+            mesStr = "stop, {0}".format(name)
+            message = bytes(mesStr, 'utf-8')
+            print('sending {!r}'.format(message))
+            sock.sendall(message)
 
-        amount_received = 0
-        amount_expected = len(message)
+            amount_received = 0
+            amount_expected = 6
 
-        while amount_received < amount_expected:
-            data = sock.recv(160)
-            amount_received += len(data)
-            print('received {!r}'.format(data))
+            while amount_received < amount_expected:
+                data = sock.recv(160)
+                amount_received += len(data)
+                print('received {!r}'.format(data))
 
     finally:
         print('closing socket')
@@ -72,22 +72,22 @@ def stopContainer(name):
         return "stop successful"
 
 def deleteContainer(name):
-    # Delete a TCP/IP socket
+    # Create a TCP/IP socket
     sock = socket.create_connection(('localhost', 7070))
 
     try:
-        mesStr = "(delete, {0})".format(name)
-        message = bytes(mesStr, 'utf-8')
-        print('sending {!r}'.format(message))
-        sock.sendall(message)
+            mesStr = "delete, {0}".format(name)
+            message = bytes(mesStr, 'utf-8')
+            print('sending {!r}'.format(message))
+            sock.sendall(message)
 
-        amount_received = 0
-        amount_expected = len(message)
+            amount_received = 0
+            amount_expected = 6
 
-        while amount_received < amount_expected:
-            data = sock.recv(160)
-            amount_received += len(data)
-            print('received {!r}'.format(data))
+            while amount_received < amount_expected:
+                data = sock.recv(160)
+                amount_received += len(data)
+                print('received {!r}'.format(data))
 
     finally:
         print('closing socket')
@@ -95,26 +95,24 @@ def deleteContainer(name):
         return "deletion successful"
 
 def listContainers():
-    # List all instances
+    # Create a TCP/IP socket
     sock = socket.create_connection(('localhost', 7070))
 
     try:
-        mesStr = "(list)"
-        message = bytes(mesStr, 'utf-8')
-        print('sending {!r}'.format(message))
-        sock.sendall(message)
+            mesStr = "list"
+            message = bytes(mesStr, 'utf-8')
+            print('sending {!r}'.format(message))
+            sock.sendall(message)
 
-        amount_received = 0
-        amount_expected = len(message)
+            amount_received = 0
+            amount_expected = 6
 
-        while amount_received < amount_expected:
-            data = sock.recv(160)
-            amount_received += len(data)
-            print('received {!r}'.format(data))
+            while amount_received < amount_expected:
+                data = sock.recv(160)
+                amount_received += len(data)
+                print('received {!r}'.format(data))
 
     finally:
         print('closing socket')
         sock.close()
         return 0
-
-listContainers()
