@@ -124,8 +124,24 @@ int main(int argc , char *argv[])
 
 			printf("validate %s\n", validate);
             //Send the message back to client
-			if (validate != -1)
+			if (validate != -1){
+				if(strcmp(token, "create") == 0){
+					FILE* output_file = fopen("containers.txt", "a+");
+					if(!output_file)
+						perror("Error fopen");
+						
+					fwrite(tmp, 1, strlen(tmp), output_file);
+					fwrite(" ", 1, 1, output_file);
+					fwrite("9090", 1, 4, output_file);
+					fwrite("\n", 1, 1, output_file);
+					printf("Done Writing!");
+					fclose(output_file);
+				}
+				else if( strcmp(token, "delete") == 0){
+					FILE* output_file = fopen("containers.txt", "r");
+				}
             	send(clientSock, "accepted", 8, 0);
+			}
 			else
 				send(clientSock, "failed", 6, 0);
         } 
