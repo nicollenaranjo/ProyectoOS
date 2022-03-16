@@ -140,6 +140,56 @@ int main(int argc , char *argv[])
 				}
 				else if( strcmp(token, "delete") == 0){
 					FILE* output_file = fopen("containers.txt", "r");
+					FILE* tmp_file = fopen("archivo2.txt", "a+");
+					char buffer[100];
+					char *ref = fgets(buffer, 100, output_file);
+
+					while(ref){
+						char *token1 = strtok(buffer, "\n");
+						char *tmp2 = token1;
+
+						
+						//printf("%s\n", buffer);
+						char *token = strtok(buffer, " "); 
+
+						if( strcmp(token, tmp) != 0 ){
+							char *token2 = strtok(NULL, " ");
+							fwrite(tmp2, 1, strlen(tmp2), tmp_file);
+							fwrite(" ", 1, 1, tmp_file);
+							fwrite(token2, 1, 4, tmp_file);
+							fwrite("\n", 1, 1, tmp_file);
+							//printf("Done Writing!");
+						}
+						ref = fgets(buffer, 100, output_file);
+
+					}
+					fclose(output_file);
+					remove("containers.txt");
+					fclose(tmp_file);
+					FILE* tmp2_file = fopen("archivo2.txt", "r+");
+					FILE* new_file = fopen("containers.txt", "a+");
+					
+					char buffer2[100];
+					char *ref2 = fgets(buffer2, 100, tmp2_file);
+					
+					while(ref2){
+						char *token1 = strtok(buffer2, "\n");
+						char *tmp2 = token1;
+						char *token = strtok(buffer2, " "); 
+							char *token2 = strtok(NULL, " ");
+							fwrite(tmp2, 1, strlen(tmp2), new_file);
+							printf("%s\n", token2);
+							fwrite(" ", 1, 1, new_file);
+							fwrite(token2, 1, 4, new_file);
+							fwrite("\n", 1, 1, new_file);
+							//printf("Done Writing!");
+						
+						ref2 = fgets(buffer2, 100, tmp2_file);
+
+					}
+					fclose(new_file);
+					fclose(tmp2_file);
+					remove("archivo2.txt");
 				}
 				
             	send(clientSock, "accepted", 8, 0);
