@@ -147,8 +147,6 @@ int main(int argc , char *argv[])
 					while(ref){
 						char *token1 = strtok(buffer, "\n");
 						char *tmp2 = token1;
-
-						
 						//printf("%s\n", buffer);
 						char *token = strtok(buffer, " "); 
 
