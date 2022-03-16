@@ -140,19 +140,6 @@ int main(int argc , char *argv[])
 				}
 				else if( strcmp(token, "delete") == 0){
 					FILE* output_file = fopen("containers.txt", "r");
-						FILE* output_file = fopen("containers.txt", "a+");
-					if(!output_file)
-						perror("Error fopen");
-						
-					fwrite(tmp, 1, strlen(tmp), output_file);
-					fwrite(" ", 1, 1, output_file);
-					fwrite("8080", 1, 4, output_file);
-					fwrite("\n", 1, 1, output_file);
-					printf("Done Writing!");
-					fclose(output_file);
-				}
-				else if( strcmp(token, "delete") == 0){
-					FILE* output_file = fopen("containers.txt", "r");
 					FILE* tmp_file = fopen("archivo2.txt", "a+");
 					char buffer[100];
 					char *ref = fgets(buffer, 100, output_file);
