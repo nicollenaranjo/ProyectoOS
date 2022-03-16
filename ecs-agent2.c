@@ -3,6 +3,9 @@
 #include<sys/socket.h>
 #include<arpa/inet.h>	//inet_addr
 #include<unistd.h>	//write
+#include<sys/types.h>
+#include <stdlib.h>
+// Port 9090
 
 int main(int argc , char *argv[]) 
 {
@@ -58,39 +61,73 @@ int main(int argc , char *argv[])
         //Receive a message from client
         if (recv(clientSock, clientMessage, 2000, 0) > 0) 
         {
+			printf("received message: %s\n", clientMessage);
+
+			int validate = 0;
 			char *token = strtok(clientMessage, ","); 
+			printf("token %s\n", token);
 			 //Select command and name
-			if( strcmp(token,"create") == 0 ){ 
-				char *token2 = strtok(NULL, ",");
+			if(strcmp(token, "create") == 0)
+			{ 
+				printf("creating\n");
+				char *token2 = strtok(NULL, ", ");
 				char *tmp = token2;
-				char *const argv2[] = {"./ecs-egent1", "docker", "build", "--t", tmp, NULL}
-				execv(argv2[0], argv2);
-				perror("Return from execlp() not expected");
+				printf("tmp %s\n", tmp);
+				char *const argv2[] = {"/bin/docker", "create", "-t", "-i", "--name", tmp, "ubuntu:latest", NULL};
+				
+				int id = fork();
+				if (id == 0)
+				{
+					validate = execv(argv2[0], argv2);
+					perror("Return from execv() not expected");
+				}
 			}
-			else if( strcmp(token,"stop") == 0 ){
-				char *token2 = strtok(NULL, ",");
+			else if (strcmp(token, "start") == 0)
+			{
+				char *token2 = strtok(NULL, ", ");
 				char *tmp = token2;
-				char *const argv2[] = {"./ecs-egent1", "docker", "stop", tmp, NULL}
-				execv(argv2[0], argv2);
-				perror("Return from execlp() not expected");
+				char *const argv2[] = {"/bin/docker", "start", tmp, NULL};
+				
+				int id = fork();
+				if (id == 0)
+				{
+					validate = execv(argv2[0], argv2);
+					perror("Return from execv() not expected");
+				}
 			}
-			else if( strcmp(token,"run") == 0 ){
-				char *token2 = strtok(NULL, ",");
+			else if (strcmp(token, "stop") == 0)
+			{
+				char *token2 = strtok(NULL, ", ");
 				char *tmp = token2;
-				char *const argv2[] = {"./ecs-egent1", "docker", "run", tmp, NULL}
-				execv(argv2[0], argv2);
-				perror("Return from execlp() not expected");
+				char *const argv2[] = {"/bin/docker", "stop", tmp, NULL};
+				
+				int id = fork();
+				if (id == 0)
+				{
+					validate = execv(argv2[0], argv2);
+					perror("Return from execv() not expected");
+				}
 			}
-			else{
-				char *token2 = strtok(NULL, ",");
+			else if (strcmp(token, "delete") == 0)
+			{
+				char *token2 = strtok(NULL, ", ");
 				char *tmp = token2;
-				char *const argv2[] = {"./ecs-egent1", "docker", "rm", "--force", tmp, NULL}
-				execv(argv2[0], argv2);
-				perror("Return from execlp() not expected");
+				char *const argv2[] = {"/bin/docker", "rm", tmp, NULL};
+				
+				int id = fork();
+				if (id == 0)
+				{
+					validate = execv(argv2[0], argv2);
+					perror("Return from execv() not expected");
+				}
 			}
-            printf("received message: %s\n", clientMessage);
+
+			printf("validate %s\n", validate);
             //Send the message back to client
-            send(clientSock, clientMessage, strlen(clientMessage), 0);
+			if (validate != -1)
+            	send(clientSock, "accepted", 8, 0);
+			else
+				send(clientSock, "failed", 6, 0);
         } 
         else 
         {

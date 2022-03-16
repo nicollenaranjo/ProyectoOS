@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <arpa/inet.h>	//inet_addr
 #include <unistd.h>	//write
+#include <sys/stat.h>
 #define SIZE 1000
 
 int main(int argc , char *argv[]) 
@@ -212,7 +213,24 @@ int main(int argc , char *argv[])
                     printf("pipe done\n");
                     found = 1;
                 }
-                send(clientSock, clientMessage, strlen(clientMessage), 0);
+                char *token = strtok(clientMessage, ","); 
+                if(strcmp(token, "list") == 0){
+                    FILE* read_file = ("containers.txt", "r");
+                    //int tmp = 0;
+                    printf("List:\n");
+                    struct stat sb;
+                    if (stat("containers.txt" , &sb) == -1) {
+                        perror("Error fopen. Not containers created");
+                    }
+                    printf("Container | Host\n");
+                    char* file_contents = malloc(sb.st_size);
+                    fread(file_contents, sb.st_size, 1, read_file);
+                    printf("%s\n", file_contents);
+                    fclose(read_file);
+                    free(file_contents);
+                }
+                else
+                    send(clientSock, clientMessage, strlen(clientMessage), 0);
             } 
             else 
             {

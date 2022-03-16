@@ -4,6 +4,8 @@
 #include<arpa/inet.h>	//inet_addr
 #include<unistd.h>	//write
 #include<sys/types.h>
+#include <stdlib.h>
+// Port 8080
 
 int main(int argc , char *argv[]) 
 {
@@ -63,13 +65,14 @@ int main(int argc , char *argv[])
 
 			int validate = 0;
 			char *token = strtok(clientMessage, ","); 
+			char *tmp;
 			printf("token %s\n", token);
 			 //Select command and name
 			if(strcmp(token, "create") == 0)
 			{ 
 				printf("creating\n");
 				char *token2 = strtok(NULL, ", ");
-				char *tmp = token2;
+				tmp = token2;
 				printf("tmp %s\n", tmp);
 				char *const argv2[] = {"/bin/docker", "create", "-t", "-i", "--name", tmp, "ubuntu:latest", NULL};
 				
@@ -77,54 +80,70 @@ int main(int argc , char *argv[])
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
-					perror("Return from execlp() not expected");
+					perror("Return from execv() not expected");
 				}
 			}
 			else if (strcmp(token, "start") == 0)
 			{
 				char *token2 = strtok(NULL, ", ");
-				char *tmp = token2;
+				tmp = token2;
 				char *const argv2[] = {"/bin/docker", "start", tmp, NULL};
 				
 				int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
-					perror("Return from execlp() not expected");
+					perror("Return from execv() not expected");
 				}
 			}
 			else if (strcmp(token, "stop") == 0)
 			{
 				char *token2 = strtok(NULL, ", ");
-				char *tmp = token2;
+				tmp = token2;
 				char *const argv2[] = {"/bin/docker", "stop", tmp, NULL};
 				
 				int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
-					perror("Return from execlp() not expected");
+					perror("Return from execv() not expected");
 				}
 			}
 			else if (strcmp(token, "delete") == 0)
 			{
 				char *token2 = strtok(NULL, ", ");
-				char *tmp = token2;
+				tmp = token2;
 				char *const argv2[] = {"/bin/docker", "rm", tmp, NULL};
 				
 				int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
-					perror("Return from execlp() not expected");
+					perror("Return from execv() not expected");
 				}
 			}
 
 			printf("validate %s\n", validate);
             //Send the message back to client
-			if (validate != -1)
+			if (validate != -1){
+				if(strcmp(token, "create") == 0){
+					FILE* output_file = fopen("containers.txt", "a+");
+					if(!output_file)
+						perror("Error fopen");
+						
+					fwrite(tmp, 1, strlen(tmp), output_file);
+					fwrite(" ", 1, 1, output_file);
+					fwrite("9090", 1, 4, output_file);
+					fwrite("\n", 1, 1, output_file);
+					printf("Done Writing!");
+					fclose(output_file);
+				}
+				else if( strcmp(token, "delete") == 0){
+					FILE* output_file = fopen("containers.txt", "r");
+				}
+				
             	send(clientSock, "accepted", 8, 0);
-			else
+			}else
 				send(clientSock, "failed", 6, 0);
         } 
         else 
