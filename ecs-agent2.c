@@ -141,6 +141,9 @@ int main(int argc , char *argv[])
 				else if( strcmp(token, "delete") == 0){
 					FILE* output_file = fopen("containers.txt", "r");
 					FILE* tmp_file = fopen("archivo2.txt", "a+");
+					if(!output_file || !tmp_file)
+						perror("Error fopen");
+
 					char buffer[100];
 					char *ref = fgets(buffer, 100, output_file);
 
@@ -166,7 +169,9 @@ int main(int argc , char *argv[])
 					fclose(tmp_file);
 					FILE* tmp2_file = fopen("archivo2.txt", "r+");
 					FILE* new_file = fopen("containers.txt", "a+");
-					
+					if(!tmp2_file || !new_file)
+						perror("Error fopen");
+
 					char buffer2[100];
 					char *ref2 = fgets(buffer2, 100, tmp2_file);
 					
