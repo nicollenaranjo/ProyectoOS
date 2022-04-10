@@ -132,7 +132,7 @@ static void *threadAdmin(void *arg) {
             puts(serverReply);
             strcpy(buffer1, serverReply);
             printf("pipe send reply: %s\n", buffer1);
-            ordinaryPipe1[1] = buffer1;
+            strcpy(ordinaryPipe1[1], buffer1);
         }
     }
     
@@ -206,7 +206,7 @@ static void *threadSuscribe(void *arg){
             // Send message through pipe to child
             strcpy(buffer2, clientMessage);
             printf("pipe send: %s\n", buffer2);
-            ordinaryPipe2[1] = buffer2
+            strcpy(ordinaryPipe1[1], buffer2);
             //Send the message back to client
             
             int found = 0;

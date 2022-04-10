@@ -5,9 +5,26 @@
 #include<unistd.h>	//write
 #include<sys/types.h>
 #include <stdlib.h>
+#include <pthread.h>
 // Port 8080
 
-int main(int argc , char *argv[]) 
+#define handle_error_en(en, msg) \
+        do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
+
+static void cleanup_handler(void *arg) {
+    printf("Called clean-up handler\n");
+    cnt = 0;
+}
+
+static void *exeju(void *arg) {
+	printf("New thread started\n");
+	pthread_cleanup_push(cleanup_handler, NULL);
+	validate = execv(argv2[0], argv2);
+	perror("Return from execv() not expected");
+	sleep(2);
+}
+
+int main(int argc, char *argv[]) 
 {
 	int socketDesc, clientSock, c, readSize;
 	struct sockaddr_in server, client;
@@ -76,12 +93,18 @@ int main(int argc , char *argv[])
 				printf("tmp %s\n", tmp);
 				char *const argv2[] = {"/bin/docker", "create", "-t", "-i", "--name", tmp, "ubuntu:latest", NULL};
 				
-				int id = fork();
+				pthread_t thr;
+    			int s;
+				s = pthread_create(&thr, NULL, exeju, *argv2);
+				if (s != 0)
+					handle_error_en(s, "threadcreate");
+				
+				/*int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
 					perror("Return from execv() not expected");
-				}
+				}*/
 			}
 			else if (strcmp(token, "start") == 0)
 			{
@@ -89,12 +112,18 @@ int main(int argc , char *argv[])
 				tmp = token2;
 				char *const argv2[] = {"/bin/docker", "start", tmp, NULL};
 				
-				int id = fork();
+				pthread_t thr;
+    			int s;
+				s = pthread_create(&thr, NULL, exeju, *argv2);
+				if (s != 0)
+					handle_error_en(s, "threadstart");
+				
+				/*int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
 					perror("Return from execv() not expected");
-				}
+				}*/
 			}
 			else if (strcmp(token, "stop") == 0)
 			{
@@ -102,12 +131,20 @@ int main(int argc , char *argv[])
 				tmp = token2;
 				char *const argv2[] = {"/bin/docker", "stop", tmp, NULL};
 				
-				int id = fork();
+
+				pthread_t thr;
+    			int s;
+				s = pthread_create(&thr, NULL, exeju, *argv2);
+				if (s != 0)
+					handle_error_en(s, "threadstop");
+				
+
+				/*int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
 					perror("Return from execv() not expected");
-				}
+				}*/
 			}
 			else if (strcmp(token, "delete") == 0)
 			{
@@ -115,12 +152,18 @@ int main(int argc , char *argv[])
 				tmp = token2;
 				char *const argv2[] = {"/bin/docker", "rm", tmp, NULL};
 				
-				int id = fork();
+				pthread_t thr;
+    			int s;
+				s = pthread_create(&thr, NULL, exeju, *argv2);
+				if (s != 0)
+					handle_error_en(s, "threadDelete");
+				
+				/*int id = fork();
 				if (id == 0)
 				{
 					validate = execv(argv2[0], argv2);
 					perror("Return from execv() not expected");
-				}
+				}*/
 			}
 
 			printf("validate %s\n", validate);
