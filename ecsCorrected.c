@@ -10,6 +10,7 @@
 #include <errno.h>
 
 #define SIZE 1000
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
 int ordinaryPipe1[2];
 int ordinaryPipe2[2];
 char buffer1[SIZE];
@@ -30,6 +31,7 @@ void cleanup_handler(void *arg)
 // thread admin
 void* threadAdmin(void *arg) 
 {
+    pthread_mutex_lock( &mutex1 );
     printf("Admin Started\n");
     //pthread_cleanup_push(cleanup_handler, NULL);
     int sock1, sock2;
@@ -146,11 +148,13 @@ void* threadAdmin(void *arg)
     close(sock2);
     close(sockUse);
     //pthread_cleanup_pop(1);
+    pthread_mutex_unlock( &mutex1 );
 }
 
 // thread suscribe
 void* threadSuscribe(void *arg)
 {
+    pthread_mutex_lock( &mutex1 );
     printf("Suscribe started\n");
     int socketDesc, clientSock, c, readSize;
     struct sockaddr_in server, client;
@@ -266,6 +270,7 @@ void* threadSuscribe(void *arg)
             puts("Connection accepted");
         }
     }
+    pthread_mutex_unlock( &mutex1 );
 }
 
 int main(int argc , char *argv[]) 

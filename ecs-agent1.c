@@ -8,6 +8,8 @@
 #include <pthread.h>
 // Port 8080
 
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
 #define handle_error_en(en, msg) \
         do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
@@ -17,11 +19,12 @@ static void cleanup_handler(void *arg) {
 }
 
 static void *exeju(void *arg) {
+	pthread_mutex_lock( &mutex1 );
 	printf("New thread started\n");
 	pthread_cleanup_push(cleanup_handler, NULL);
 	validate = execv(argv2[0], argv2);
 	perror("Return from execv() not expected");
-	sleep(2);
+	pthread_mutex_unlock( &mutex1 );
 }
 
 int main(int argc, char *argv[]) 
@@ -99,6 +102,7 @@ int main(int argc, char *argv[])
 				if (s != 0)
 					handle_error_en(s, "threadcreate");
 				
+				sleep(99999999);
 				/*int id = fork();
 				if (id == 0)
 				{
@@ -118,6 +122,7 @@ int main(int argc, char *argv[])
 				if (s != 0)
 					handle_error_en(s, "threadstart");
 				
+				sleep(99999999);
 				/*int id = fork();
 				if (id == 0)
 				{
@@ -138,7 +143,7 @@ int main(int argc, char *argv[])
 				if (s != 0)
 					handle_error_en(s, "threadstop");
 				
-
+				sleep(99999999);
 				/*int id = fork();
 				if (id == 0)
 				{
@@ -158,6 +163,7 @@ int main(int argc, char *argv[])
 				if (s != 0)
 					handle_error_en(s, "threadDelete");
 				
+				sleep(99999999);
 				/*int id = fork();
 				if (id == 0)
 				{

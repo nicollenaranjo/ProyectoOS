@@ -17,11 +17,12 @@ static void cleanup_handler(void *arg) {
 }
 
 static void *exeju(void *arg) {
+	pthread_mutex_lock( &mutex1 );
 	printf("New thread started\n");
 	pthread_cleanup_push(cleanup_handler, NULL);
 	validate = execv(argv2[0], argv2);
 	perror("Return from execv() not expected");
-	sleep(2);
+	pthread_mutex_unlock( &mutex1 );
 }
 
 int main(int argc , char *argv[]) 
@@ -99,9 +100,7 @@ int main(int argc , char *argv[])
 				if (s != 0)
 					handle_error_en(s, "threadcreate");
 				
-				validate = execv(argv2[0], argv2);
-				perror("Return from execv() not expected");
-				sleep(2);
+				sleep(99999999);
 				
 			}
 			else if (strcmp(token, "start") == 0)
@@ -115,7 +114,7 @@ int main(int argc , char *argv[])
 				s = pthread_create(&thr, NULL, exeju,  *argv2);
 				if (s != 0)
 					handle_error_en(s, "threadstart");
-				
+				sleep(99999999);
 			}
 			else if (strcmp(token, "stop") == 0)
 			{
@@ -128,7 +127,7 @@ int main(int argc , char *argv[])
 				s = pthread_create(&thr, NULL, exeju,  *argv2);
 				if (s != 0)
 					handle_error_en(s, "threadstop");
-				
+				sleep(99999999);
 			}
 			else if (strcmp(token, "delete") == 0)
 			{
@@ -141,6 +140,7 @@ int main(int argc , char *argv[])
 				s = pthread_create(&thr, NULL, exeju,  *argv2);
 				if (s != 0)
 					handle_error_en(s, "threadDelete");
+				sleep(99999999);
 			}
 
 			printf("validate %s\n", validate);
