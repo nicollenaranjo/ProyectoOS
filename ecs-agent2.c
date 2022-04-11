@@ -8,6 +8,8 @@
 #include <pthread.h>
 // Port 9090
 
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
 #define handle_error_en(en, msg) \
         do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
